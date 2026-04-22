@@ -22,7 +22,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-simmanager}:${POSTGRES_PASSWORD:-simmanager_secret_2024}@db:5432/${POSTGRES_DB:-sim_manager_pro}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-simmanager}:${POSTGRES_PASSWORD:-simmanager_secret_2024}@db:5432/${POSTGRES_DB:-sim_manager_pro}
       NODE_ENV: production
     depends_on:
       db:
