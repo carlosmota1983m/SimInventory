@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SlotConfig {
+  ONE_PHYSICAL       // 1 Físico
+  TWO_PHYSICAL       // 2 Físicos
+  ONE_PHYS_ONE_ESIM  // 1 Físico + 1 eSIM
+  TWO_ESIM           // 2 eSIM
+}
+
+enum SimType {
+  FISICA
+  ESIM
+}
+
+model Device {
+  id                 String     @id @default(uuid())
+  nombre             String
+  configuracionSlots SlotConfig @map("configuracion_slots")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  accounts Account[]
+  sims     Sim[]
+
+  @@map("devices")
+}
+
+model Account {
+  id            String   @id @default(uuid())
+  dispositivoId String   @map("dispositivo_id")
+  plataforma    String
+  usuarioEmail  String   @map("usuario_email")
+  notas         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  device Device @relation(fields: [dispositivoId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Sim {
+  id                      String   @id @default(uuid())
+  tipo                    SimType
+  numero                  String
+  compania                String
+  registroGubernamental   Boolean  @default(false) @map("registro_gubernamental")
+  ssidIccid               String?  @map("ssid_iccid")
+  pin                     String?
+  puk                     String?
+  fechaUltimaRecarga      DateTime? @map("fecha_ultima_recarga")
+  dispositivoId           String?  @map("dispositivo_id")
+  imagenQr                String?  @map("imagen_qr")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  device Device? @relation(fields: [dispositivoId], references: [id], onDelete: SetNull)
+
+  @@map("sims")
+}

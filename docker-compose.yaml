@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-simmanager}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-simmanager_secret_2024}
+      POSTGRES_DB: ${POSTGRES_DB:-sim_manager_pro}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-simmanager}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-simmanager}:${POSTGRES_PASSWORD:-simmanager_secret_2024}@db:5432/${POSTGRES_DB:-sim_manager_pro}?schema=public
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
