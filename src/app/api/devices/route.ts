@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
+
 // GET /api/devices — list all devices with related accounts and sims
 export async function GET() {
   try {
