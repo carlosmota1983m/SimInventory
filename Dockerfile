@@ -3,6 +3,9 @@ FROM node:20-alpine AS builder
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE='binary'
+ENV PRISMA_CLIENT_ENGINE_TYPE='binary'
+
 # Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -24,7 +27,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PRISMA_CLIENT_ENGINE_TYPE='library'
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE='binary'
+ENV PRISMA_CLIENT_ENGINE_TYPE='binary'
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -39,6 +43,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 
@@ -51,5 +56,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run generate and migrations then start the server
-CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && node server.js"]
+# Run migrations then start the server
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
