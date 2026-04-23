@@ -45,7 +45,7 @@ COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=builder /app/node_modules/.bin/ ./node_modules/.bin/
 
 # Add node_modules/.bin to PATH
 ENV PATH /app/node_modules/.bin:$PATH
