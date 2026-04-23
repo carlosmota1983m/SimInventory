@@ -38,17 +38,17 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Install production dependencies (includes prisma + all transitive deps like 'effect')
+COPY --from=builder /app/package.json /app/package-lock.json ./
+RUN npm ci --omit=dev
+
 # Copy Prisma files for migrations at startup
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/.bin/ ./node_modules/.bin/
 
-# Add node_modules/.bin to PATH
-ENV PATH /app/node_modules/.bin:$PATH
+# Regenerate prisma client for this platform
+RUN npx prisma generate
 
 USER nextjs
 
