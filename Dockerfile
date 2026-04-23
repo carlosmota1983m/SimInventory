@@ -47,9 +47,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# Regenerate prisma client for this platform
-RUN npx prisma generate
-
 USER nextjs
 
 EXPOSE 3000
