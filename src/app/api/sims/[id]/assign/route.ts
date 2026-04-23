@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { SLOT_CAPACITY } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
+
 // PATCH /api/sims/:id/assign — assign a SIM to a device slot
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
