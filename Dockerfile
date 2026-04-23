@@ -1,19 +1,25 @@
 # ---- Stage 1: Build ----
 FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# Copy Prisma schema before generating
+COPY prisma ./prisma/
+RUN npx prisma generate
+
 # Copy source code
 COPY . .
 
-# Generate Prisma Client + Build Next.js
-RUN npx prisma generate && npm run build
+# Build Next.js
+RUN npm run build
 
 # ---- Stage 2: Runner ----
 FROM node:20-alpine AS runner
+RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
 ENV NODE_ENV=production
