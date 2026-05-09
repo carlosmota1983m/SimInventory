@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, X } from 'lucide-react';
+import { AlertTriangle, X, ShieldAlert } from 'lucide-react';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -24,6 +24,26 @@ export default function ConfirmModal({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
+  const isDanger = variant === 'danger';
+
+  const colors = isDanger
+    ? {
+        iconBg: 'rgba(127,29,29,0.4)',
+        iconBorder: 'rgba(220,38,38,0.3)',
+        iconColor: '#f87171',
+        btnBg: 'linear-gradient(135deg, #b91c1c, #dc2626)',
+        btnShadow: '0 4px 20px rgba(220,38,38,0.35)',
+        btnHoverBg: 'linear-gradient(135deg, #dc2626, #ef4444)',
+      }
+    : {
+        iconBg: 'rgba(120,53,15,0.4)',
+        iconBorder: 'rgba(217,119,6,0.3)',
+        iconColor: '#fbbf24',
+        btnBg: 'linear-gradient(135deg, #b45309, #d97706)',
+        btnShadow: '0 4px 20px rgba(217,119,6,0.35)',
+        btnHoverBg: 'linear-gradient(135deg, #d97706, #f59e0b)',
+      };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -34,57 +54,70 @@ export default function ConfirmModal({
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
           onClick={onCancel}
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-md" />
 
-          {/* Modal */}
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            initial={{ scale: 0.88, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            exit={{ scale: 0.88, opacity: 0, y: 20 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#1a1a2e]/95 p-6 shadow-2xl backdrop-blur-xl"
+            className="relative w-full max-w-sm rounded-2xl overflow-hidden"
+            style={{
+              background: '#111113',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: `0 32px 80px rgba(0,0,0,0.7), ${colors.btnShadow.replace('0 4px 20px', '0 0 60px')}`,
+            }}
           >
             <button
               onClick={onCancel}
-              className="absolute right-4 top-4 rounded-lg p-1 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 rounded-xl p-1.5 text-zinc-600 transition-all hover:bg-white/8 hover:text-zinc-300"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
 
-            <div className="flex items-start gap-4">
+            <div className="p-6">
+              {/* Icon */}
               <div
-                className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${
-                  variant === 'danger' ? 'bg-red-500/20 text-red-400' : 'bg-amber-500/20 text-amber-400'
-                }`}
+                className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
+                style={{ background: colors.iconBg, border: `1px solid ${colors.iconBorder}` }}
               >
-                <AlertTriangle size={24} />
+                <AlertTriangle size={26} style={{ color: colors.iconColor }} />
               </div>
 
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-400">{message}</p>
-              </div>
-            </div>
+              {/* Content */}
+              <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">{message}</p>
 
-            <div className="mt-6 flex gap-3 justify-end">
-              <button
-                onClick={onCancel}
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-all hover:bg-white/10 hover:text-white"
-              >
-                {cancelLabel}
-              </button>
-              <button
-                onClick={onConfirm}
-                className={`rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all ${
-                  variant === 'danger'
-                    ? 'bg-red-600 hover:bg-red-500 shadow-lg shadow-red-600/25'
-                    : 'bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-600/25'
-                }`}
-              >
-                {confirmLabel}
-              </button>
+              {/* Actions */}
+              <div className="mt-6 flex gap-2.5">
+                <button
+                  onClick={onCancel}
+                  className="flex-1 rounded-xl py-2.5 text-sm font-medium text-zinc-300 transition-all"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.09)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
+                >
+                  {cancelLabel}
+                </button>
+
+                <button
+                  onClick={onConfirm}
+                  className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white transition-all"
+                  style={{
+                    background: colors.btnBg,
+                    boxShadow: colors.btnShadow,
+                    border: `1px solid ${colors.iconBorder}`,
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = colors.btnHoverBg; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = colors.btnBg; }}
+                >
+                  {confirmLabel}
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>

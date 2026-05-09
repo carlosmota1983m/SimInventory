@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Smartphone, CreditCard, ChevronDown } from 'lucide-react';
 import type { SlotConfig } from '@/types';
 import { SLOT_CONFIG_LABELS } from '@/types';
 
@@ -14,11 +14,11 @@ interface DeviceFormModalProps {
   title?: string;
 }
 
-const slotOptions: { value: SlotConfig; label: string }[] = [
-  { value: 'ONE_PHYSICAL', label: SLOT_CONFIG_LABELS.ONE_PHYSICAL },
-  { value: 'TWO_PHYSICAL', label: SLOT_CONFIG_LABELS.TWO_PHYSICAL },
-  { value: 'ONE_PHYS_ONE_ESIM', label: SLOT_CONFIG_LABELS.ONE_PHYS_ONE_ESIM },
-  { value: 'TWO_ESIM', label: SLOT_CONFIG_LABELS.TWO_ESIM },
+const slotOptions: { value: SlotConfig; label: string; desc: string; icon: string }[] = [
+  { value: 'ONE_PHYSICAL', label: '1 Físico', desc: '1 slot para SIM física', icon: '📱' },
+  { value: 'TWO_PHYSICAL', label: '2 Físicos', desc: '2 slots para SIM física', icon: '📱' },
+  { value: 'ONE_PHYS_ONE_ESIM', label: '1 Físico + eSIM', desc: '1 SIM + 1 eSIM', icon: '📶' },
+  { value: 'TWO_ESIM', label: '2 eSIM', desc: '2 slots para eSIM', icon: '🔵' },
 ];
 
 export default function DeviceFormModal({ isOpen, onClose, onSubmit, initialData, title }: DeviceFormModalProps) {
@@ -50,61 +50,109 @@ export default function DeviceFormModal({ isOpen, onClose, onSubmit, initialData
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
+
       <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.92, opacity: 0, y: 16 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        exit={{ scale: 0.92, opacity: 0, y: 16 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#1a1a2e]/95 p-6 shadow-2xl backdrop-blur-xl"
+        className="relative w-full max-w-md rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          background: '#111113',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(99,102,241,0.1)',
+        }}
       >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-6 py-5"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <X size={18} />
-        </button>
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl"
+              style={{ background: 'linear-gradient(135deg, #4338ca30, #6366f120)', border: '1px solid #6366f130' }}
+            >
+              <Smartphone size={18} className="text-indigo-300" />
+            </div>
+            <h2 className="text-lg font-semibold text-white">{title || 'Nuevo Dispositivo'}</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-xl p-2 text-zinc-500 transition-all hover:bg-white/8 hover:text-zinc-200"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-        <h2 className="text-xl font-bold text-white mb-6">{title || 'Nuevo Dispositivo'}</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {/* Device name */}
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Nombre del dispositivo</label>
+            <label className="block text-sm font-medium text-zinc-300 mb-2">
+              Nombre del dispositivo
+            </label>
             <input
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              placeholder="iPhone 13 Pro, Samsung S24..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-600 outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+              placeholder="iPhone 15 Pro, Galaxy S24..."
+              className="input-base"
               autoFocus
               required
             />
           </div>
 
+          {/* Slot configuration */}
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Configuración de Slots</label>
-            <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-zinc-300 mb-3">
+              Configuración de slots
+            </label>
+            <div className="grid grid-cols-2 gap-2">
               {slotOptions.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setConfiguracionSlots(opt.value)}
-                  className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
-                    configuracionSlots === opt.value
-                      ? 'border-violet-500/60 bg-violet-500/20 text-violet-300 shadow-lg shadow-violet-500/10'
-                      : 'border-white/10 bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-zinc-200'
-                  }`}
+                  className="relative flex flex-col items-start gap-1 rounded-xl px-4 py-3 text-left transition-all"
+                  style={{
+                    background: configuracionSlots === opt.value
+                      ? 'linear-gradient(135deg, #4338ca25, #6366f115)'
+                      : 'rgba(255,255,255,0.03)',
+                    border: configuracionSlots === opt.value
+                      ? '1px solid rgba(99,102,241,0.5)'
+                      : '1px solid rgba(255,255,255,0.07)',
+                    boxShadow: configuracionSlots === opt.value
+                      ? '0 0 0 2px rgba(99,102,241,0.1), inset 0 1px 0 rgba(99,102,241,0.1)'
+                      : 'none',
+                  }}
                 >
-                  {opt.label}
+                  <span className="text-base">{opt.icon}</span>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: configuracionSlots === opt.value ? '#a5b4fc' : '#d4d4d8' }}
+                  >
+                    {opt.label}
+                  </span>
+                  <span className="text-[11px] text-zinc-600">{opt.desc}</span>
+                  {configuracionSlots === opt.value && (
+                    <div
+                      className="absolute right-2 top-2 h-2 w-2 rounded-full"
+                      style={{ background: '#818cf8' }}
+                    />
+                  )}
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={submitting || !nombre.trim()}
-            className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition-all hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary w-full text-sm py-3"
           >
             {submitting ? 'Guardando...' : initialData ? 'Guardar Cambios' : 'Crear Dispositivo'}
           </button>

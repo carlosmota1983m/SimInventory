@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Users } from 'lucide-react';
 import type { Device } from '@/types';
+import { getPlatformLogoUrl } from '@/lib/constants';
 
 interface AccountFormModalProps {
   isOpen: boolean;
@@ -49,7 +50,12 @@ export default function AccountFormModal({
     if (!dispositivoId || !plataforma.trim() || !usuarioEmail.trim()) return;
     setSubmitting(true);
     try {
-      await onSubmit({ dispositivoId, plataforma: plataforma.trim(), usuarioEmail: usuarioEmail.trim(), notas: notas.trim() || undefined });
+      await onSubmit({
+        dispositivoId,
+        plataforma: plataforma.trim(),
+        usuarioEmail: usuarioEmail.trim(),
+        notas: notas.trim() || undefined,
+      });
       onClose();
     } catch (err) {
       console.error(err);
@@ -66,103 +72,168 @@ export default function AccountFormModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
+
       <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.92, opacity: 0, y: 16 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        exit={{ scale: 0.92, opacity: 0, y: 16 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#1a1a2e]/95 p-6 shadow-2xl backdrop-blur-xl max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden max-h-[88vh] flex flex-col"
+        style={{
+          background: '#111113',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
+        }}
       >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+        {/* Header */}
+        <div
+          className="flex-shrink-0 flex items-center justify-between px-6 py-5"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <X size={18} />
-        </button>
-
-        <h2 className="text-xl font-bold text-white mb-6">{title || 'Nueva Cuenta'}</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {!preselectedDeviceId && (
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Dispositivo</label>
-              <select
-                value={dispositivoId}
-                onChange={(e) => setDispositivoId(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 appearance-none"
-                required
-              >
-                <option value="" className="bg-[#1a1a2e]">Seleccionar dispositivo...</option>
-                {devices.map((d) => (
-                  <option key={d.id} value={d.id} className="bg-[#1a1a2e]">{d.nombre}</option>
-                ))}
-              </select>
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl"
+              style={{ background: 'linear-gradient(135deg, #16423025, #16a34a15)', border: '1px solid #16a34a30' }}
+            >
+              <Users size={18} className="text-green-400" />
             </div>
-          )}
+            <h2 className="text-lg font-semibold text-white">{title || 'Nueva Cuenta'}</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-xl p-2 text-zinc-500 transition-all hover:bg-white/8 hover:text-zinc-200"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-          <div className="relative">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Plataforma</label>
-            <input
-              type="text"
-              value={plataforma}
-              onChange={(e) => setPlataforma(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="WhatsApp, Amazon, TikTok..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-600 outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
-              required
-            />
-            {showSuggestions && filteredPlatforms.length > 0 && (
-              <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-40 overflow-y-auto rounded-xl border border-white/10 bg-[#1a1a2e] shadow-xl">
-                {filteredPlatforms.slice(0, 8).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onMouseDown={() => {
-                      setPlataforma(p);
-                      setShowSuggestions(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-sm text-zinc-300 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    {p}
-                  </button>
-                ))}
+        {/* Scrollable form */}
+        <div className="overflow-y-auto flex-1">
+          <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            {/* Device selector */}
+            {!preselectedDeviceId && (
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-2">
+                  Dispositivo <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={dispositivoId}
+                  onChange={(e) => setDispositivoId(e.target.value)}
+                  className="input-base text-sm appearance-none"
+                  style={{ background: '#27272a' }}
+                  required
+                >
+                  <option value="" style={{ background: '#1c1c1f' }}>Seleccionar dispositivo...</option>
+                  {devices.map((d) => (
+                    <option key={d.id} value={d.id} style={{ background: '#1c1c1f' }}>
+                      {d.nombre}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Email / Usuario</label>
-            <input
-              type="text"
-              value={usuarioEmail}
-              onChange={(e) => setUsuarioEmail(e.target.value)}
-              placeholder="usuario@ejemplo.com"
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-600 outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
-              required
-            />
-          </div>
+            {/* Platform with suggestions */}
+            <div className="relative">
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
+                Plataforma <span className="text-red-400">*</span>
+              </label>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Notas <span className="text-zinc-600">(opcional)</span></label>
-            <textarea
-              value={notas}
-              onChange={(e) => setNotas(e.target.value)}
-              placeholder="Notas adicionales..."
-              rows={2}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-600 outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 resize-none"
-            />
-          </div>
+              {/* Platform preview */}
+              {plataforma && (
+                <div className="flex items-center gap-2 mb-2">
+                  <img
+                    src={getPlatformLogoUrl(plataforma)}
+                    alt={plataforma}
+                    className="h-6 w-6 rounded-md object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                  <span className="text-xs text-zinc-400">{plataforma}</span>
+                </div>
+              )}
 
-          <button
-            type="submit"
-            disabled={submitting || !dispositivoId || !plataforma.trim() || !usuarioEmail.trim()}
-            className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition-all hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitting ? 'Guardando...' : initialData ? 'Guardar Cambios' : 'Crear Cuenta'}
-          </button>
-        </form>
+              <input
+                type="text"
+                value={plataforma}
+                onChange={(e) => setPlataforma(e.target.value)}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="WhatsApp, Amazon, TikTok..."
+                className="input-base text-sm"
+                required
+              />
+
+              {showSuggestions && filteredPlatforms.length > 0 && (
+                <div
+                  className="absolute top-full left-0 right-0 z-10 mt-1.5 overflow-hidden rounded-xl shadow-2xl"
+                  style={{
+                    background: '#1c1c1f',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    maxHeight: 200,
+                    overflowY: 'auto',
+                  }}
+                >
+                  {filteredPlatforms.slice(0, 8).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onMouseDown={() => { setPlataforma(p); setShowSuggestions(false); }}
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-zinc-300 transition-colors hover:bg-white/8 hover:text-white"
+                    >
+                      <img
+                        src={getPlatformLogoUrl(p)}
+                        alt={p}
+                        className="h-5 w-5 rounded object-cover flex-shrink-0"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Email / Username */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
+                Email / Usuario <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                value={usuarioEmail}
+                onChange={(e) => setUsuarioEmail(e.target.value)}
+                placeholder="usuario@ejemplo.com"
+                className="input-base text-sm"
+                required
+              />
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">
+                Notas <span className="text-zinc-600 font-normal">(opcional)</span>
+              </label>
+              <textarea
+                value={notas}
+                onChange={(e) => setNotas(e.target.value)}
+                placeholder="Notas adicionales..."
+                rows={2}
+                className="input-base text-sm resize-none"
+              />
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={submitting || !dispositivoId || !plataforma.trim() || !usuarioEmail.trim()}
+              className="btn-primary w-full text-sm py-3"
+            >
+              {submitting ? 'Guardando...' : initialData ? 'Guardar Cambios' : 'Crear Cuenta'}
+            </button>
+          </form>
+        </div>
       </motion.div>
     </motion.div>
   );
