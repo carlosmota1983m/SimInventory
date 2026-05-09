@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Smartphone, CreditCard, Users, Plus, Search,
   LayoutGrid, Archive, Signal, AlertTriangle,
-  Activity, ChevronRight, Zap,
+  Activity, ChevronRight, Zap, LogOut,
 } from 'lucide-react';
 import { useDevices } from '@/hooks/useDevices';
 import { useSims } from '@/hooks/useSims';
@@ -17,11 +17,14 @@ import SimCard from '@/components/sims/SimCard';
 import SimFormModal from '@/components/sims/SimFormModal';
 import AccountFormModal from '@/components/accounts/AccountFormModal';
 import ConfirmModal from '@/components/shared/ConfirmModal';
+import LoginScreen from '@/components/auth/LoginScreen';
 import type { Sim } from '@/types';
 
 type Tab = 'devices' | 'sims' | 'accounts';
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('devices');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -41,9 +44,29 @@ export default function Home() {
   } | null>(null);
   const [draggedSimId, setDraggedSimId] = useState<string | null>(null);
 
+  useEffect(() => {
+    const auth = localStorage.getItem('sim-manager-auth');
+    setIsAuthenticated(auth === 'true');
+    setAuthChecked(true);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('sim-manager-auth');
+    setIsAuthenticated(false);
+  };
+
   const refreshAll = useCallback(async () => {
     await Promise.all([fetchDevices(), fetchSims(), fetchAccounts()]);
   }, [fetchDevices, fetchSims, fetchAccounts]);
+
+  // Show nothing while checking auth
+  if (!authChecked) return null;
+
+  // Show login screen
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={() => setIsAuthenticated(true)} />;
+  }
+
 
   const handleDeleteDevice = (deviceId: string, deviceName: string) => {
     setConfirmAction({
@@ -162,6 +185,17 @@ export default function Home() {
                 <Archive size={11} />
                 {simsInDrawer} en cajón
               </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: '#444', cursor: 'pointer' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(239,68,68,0.2)'; (e.currentTarget as HTMLElement).style.color = '#f87171'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLElement).style.color = '#444'; }}
+                title="Cerrar sesión"
+              >
+                <LogOut size={11} />
+                <span className="hidden sm:inline">Salir</span>
+              </button>
             </div>
           </div>
 
