@@ -111,7 +111,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
             <div className="login-logo-pulse" />
           </div>
           <div className="login-logo-text">
-            <h1>SIM Manager</h1>
+            <h1>Gestor de SIMs PRO V1</h1>
             <span>Pro · Inventario</span>
           </div>
         </motion.div>

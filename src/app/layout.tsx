@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SIM Manager Pro — Inventario de Dispositivos y SIMs",
+  title: "Gestor de SIMs PRO V1 — Inventario de Dispositivos y SIMs",
   description:
     "Gestiona tus dispositivos móviles, líneas telefónicas (SIM/eSIM) y cuentas digitales. Inventario profesional autoalojado.",
   keywords: ["SIM", "eSIM", "inventario", "dispositivos", "cuentas", "gestión"],

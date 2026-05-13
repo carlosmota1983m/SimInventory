@@ -162,7 +162,7 @@ export default function Home() {
                 <Signal size={15} className="text-white" />
               </div>
               <div>
-                <h1 className="text-sm font-bold text-white tracking-tight leading-none">SIM Manager</h1>
+                <h1 className="text-sm font-bold text-white tracking-tight leading-none">Gestor de SIMs PRO V1</h1>
                 <p className="text-[10px] mt-0.5" style={{ color: '#444' }}>Pro · Inventario</p>
               </div>
             </div>
