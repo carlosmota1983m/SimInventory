@@ -1,12 +1,27 @@
 import { PrismaClient } from '../src/generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
+import { hashPassword, normalizeAnswer } from '../src/lib/auth-utils';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('🌱 Seeding database...');
+
+  // Create default admin user if none exists
+  const userCount = await prisma.user.count();
+  if (userCount === 0) {
+    console.log('  👤 Creating default admin user...');
+    await prisma.user.create({
+      data: {
+        username: 'admin',
+        password: hashPassword('admin123'),
+        recoveryQuestion: '¿Nombre de tu primera mascota?',
+        recoveryAnswer: hashPassword(normalizeAnswer('admin')),
+      },
+    });
+  }
 
   // Create devices
   const iphone = await prisma.device.create({

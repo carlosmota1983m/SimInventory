@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { 
   Smartphone, CreditCard, Users, Signal, Activity, Archive,
   AlertTriangle, Search, Filter, RefreshCw, LogOut, Grid3X3,
-  LayoutGrid, List
+  LayoutGrid, List, Plus
 } from 'lucide-react';
 import type { Device, Sim, Account } from '@/types';
 

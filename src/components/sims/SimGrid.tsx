@@ -172,8 +172,8 @@ function SimCard({
           borderColor: `${accent.from}30`,
         }}
         draggable={isDrawer}
-        onDragStart={handleDragStart}
-        onDragEnd={onDragEnd}
+        onDragStart={handleDragStart as any}
+        onDragEnd={onDragEnd as any}
       >
         {/* Carrier */}
         <div className="sim-list-carrier">
@@ -255,8 +255,8 @@ function SimCard({
         borderColor: `${accent.from}35`,
       }}
       draggable={isDrawer}
-      onDragStart={handleDragStart}
-      onDragEnd={onDragEnd}
+      onDragStart={handleDragStart as any}
+      onDragEnd={onDragEnd as any}
     >
       {/* Corner Notch for Physical SIM */}
       {sim.tipo === 'FISICA' && (

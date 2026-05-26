@@ -40,7 +40,7 @@ export default function SimCard({ sim, onEdit, onDelete, onUnlink, isDragging, o
       exit={{ opacity: 0, scale: 0.95, y: 8 }}
       transition={{ type: 'spring', stiffness: 360, damping: 30 }}
       draggable={isDrawer}
-      onDragStart={onDragStart}
+      onDragStart={onDragStart as any}
       className="group relative overflow-hidden rounded-2xl transition-shadow duration-200"
       style={{
         background: `linear-gradient(148deg, ${accent.from}12 0%, ${accent.to}07 100%)`,

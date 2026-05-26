@@ -2,6 +2,7 @@ generator client {
   provider      = "prisma-client-js"
   engineType    = "binary"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  output        = "../src/generated/prisma"
 }
 
 datasource db {
@@ -66,3 +67,16 @@ model Sim {
 
   @@map("sims")
 }
+
+model User {
+  id               String   @id @default(uuid())
+  username         String   @unique
+  password         String
+  recoveryQuestion String   @map("recovery_question")
+  recoveryAnswer   String   @map("recovery_answer")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
