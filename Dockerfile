@@ -33,19 +33,17 @@ ENV PRISMA_CLIENT_ENGINE_TYPE='binary'
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy standalone build (includes bundled dependencies)
+# Copy standalone build
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Install production dependencies (includes prisma + all transitive deps like 'effect')
-COPY --from=builder /app/package.json /app/package-lock.json ./
-RUN npm ci --omit=dev
+# Copy ALL node_modules from builder (NO re-install)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
-# Copy Prisma files for migrations at startup
+# Copy Prisma files for migrations
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 USER nextjs
 
@@ -53,5 +51,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run migrations then start the server
+# Run migrations then start
 CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
