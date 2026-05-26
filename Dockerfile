@@ -5,6 +5,8 @@ WORKDIR /app
 
 ENV PRISMA_CLI_QUERY_ENGINE_TYPE='binary'
 ENV PRISMA_CLIENT_ENGINE_TYPE='binary'
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_SKIP_BUILD_STATIC_GENERATION=1
 
 # Install dependencies
 COPY package.json package-lock.json ./
@@ -17,8 +19,8 @@ RUN npx prisma generate
 # Copy source code
 COPY . .
 
-# Build Next.js
-RUN npm run build
+# Build Next.js with more memory
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 # ---- Stage 2: Runner ----
 FROM node:22-alpine AS runner
