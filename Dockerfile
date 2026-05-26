@@ -21,7 +21,7 @@ COPY . .
 RUN npm run build
 
 # ---- Stage 2: Runner ----
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
