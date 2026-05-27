@@ -18,6 +18,6 @@ export async function PATCH(_request: Request, { params }: { params: Promise<{ i
     return NextResponse.json(sim);
   } catch (error) {
     console.error('Error unlinking sim:', error);
-    return NextResponse.json({ error: 'Error unlinking sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error unlinking sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

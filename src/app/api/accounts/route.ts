@@ -14,7 +14,7 @@ export async function GET() {
     return NextResponse.json(accounts);
   } catch (error) {
     console.error('Error fetching accounts:', error);
-    return NextResponse.json({ error: 'Error fetching accounts' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching accounts', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -41,6 +41,6 @@ export async function POST(request: Request) {
     return NextResponse.json(account, { status: 201 });
   } catch (error) {
     console.error('Error creating account:', error);
-    return NextResponse.json({ error: 'Error creating account' }, { status: 500 });
+    return NextResponse.json({ error: 'Error creating account', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

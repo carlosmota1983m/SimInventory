@@ -17,7 +17,7 @@ export async function GET() {
     return NextResponse.json(devices);
   } catch (error) {
     console.error('Error fetching devices:', error);
-    return NextResponse.json({ error: 'Error fetching devices' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching devices', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -39,6 +39,6 @@ export async function POST(request: Request) {
     return NextResponse.json(device, { status: 201 });
   } catch (error) {
     console.error('Error creating device:', error);
-    return NextResponse.json({ error: 'Error creating device' }, { status: 500 });
+    return NextResponse.json({ error: 'Error creating device', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

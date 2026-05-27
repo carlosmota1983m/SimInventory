@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error in register route:', error);
     return NextResponse.json(
-      { error: 'Error al registrar el usuario' },
+      { error: 'Error al registrar el usuario', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

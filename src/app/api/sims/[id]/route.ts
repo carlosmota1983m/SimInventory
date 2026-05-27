@@ -20,7 +20,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json(sim);
   } catch (error) {
     console.error('Error fetching sim:', error);
-    return NextResponse.json({ error: 'Error fetching sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -50,7 +50,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json(sim);
   } catch (error) {
     console.error('Error updating sim:', error);
-    return NextResponse.json({ error: 'Error updating sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error updating sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -62,6 +62,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting sim:', error);
-    return NextResponse.json({ error: 'Error deleting sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error deleting sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

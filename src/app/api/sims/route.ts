@@ -14,7 +14,7 @@ export async function GET() {
     return NextResponse.json(sims);
   } catch (error) {
     console.error('Error fetching sims:', error);
-    return NextResponse.json({ error: 'Error fetching sims' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching sims', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -47,6 +47,6 @@ export async function POST(request: Request) {
     return NextResponse.json(sim, { status: 201 });
   } catch (error) {
     console.error('Error creating sim:', error);
-    return NextResponse.json({ error: 'Error creating sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error creating sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

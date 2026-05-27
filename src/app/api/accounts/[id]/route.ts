@@ -20,7 +20,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json(account);
   } catch (error) {
     console.error('Error fetching account:', error);
-    return NextResponse.json({ error: 'Error fetching account' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching account', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -44,7 +44,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json(account);
   } catch (error) {
     console.error('Error updating account:', error);
-    return NextResponse.json({ error: 'Error updating account' }, { status: 500 });
+    return NextResponse.json({ error: 'Error updating account', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -56,6 +56,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting account:', error);
-    return NextResponse.json({ error: 'Error deleting account' }, { status: 500 });
+    return NextResponse.json({ error: 'Error deleting account', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Error in recover GET route:', error);
     return NextResponse.json(
-      { error: 'Error al obtener la pregunta de seguridad' },
+      { error: 'Error al obtener la pregunta de seguridad', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error in recover POST route:', error);
     return NextResponse.json(
-      { error: 'Error al restablecer la contraseña' },
+      { error: 'Error al restablecer la contraseña', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

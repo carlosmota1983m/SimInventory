@@ -54,6 +54,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json(updatedSim);
   } catch (error) {
     console.error('Error assigning sim:', error);
-    return NextResponse.json({ error: 'Error assigning sim' }, { status: 500 });
+    return NextResponse.json({ error: 'Error assigning sim', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

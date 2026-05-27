@@ -20,7 +20,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json(device);
   } catch (error) {
     console.error('Error fetching device:', error);
-    return NextResponse.json({ error: 'Error fetching device' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching device', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -40,7 +40,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json(device);
   } catch (error) {
     console.error('Error updating device:', error);
-    return NextResponse.json({ error: 'Error updating device' }, { status: 500 });
+    return NextResponse.json({ error: 'Error updating device', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
@@ -61,6 +61,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting device:', error);
-    return NextResponse.json({ error: 'Error deleting device' }, { status: 500 });
+    return NextResponse.json({ error: 'Error deleting device', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
