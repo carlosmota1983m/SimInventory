@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   // Esta sección ignora los errores de TypeScript durante la construcción
   typescript: {
     ignoreBuildErrors: true,
