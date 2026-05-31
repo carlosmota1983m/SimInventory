@@ -1,20 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+const prismaClientSingleton = () => {
+  return new PrismaClient({
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+  });
 };
 
-function createPrismaClient() {
-  return new PrismaClient();
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 
-// Lazy getter — only creates the client on first access (not at import/build time)
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    if (!globalForPrisma.prisma) {
-      globalForPrisma.prisma = createPrismaClient();
-    }
-    return (globalForPrisma.prisma as unknown as Record<string | symbol, unknown>)[prop];
-  },
-});
+export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prismaGlobal = prisma;
+}
+
 

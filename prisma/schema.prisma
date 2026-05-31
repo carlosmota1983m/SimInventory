@@ -31,6 +31,7 @@ model Device {
   accounts Account[]
   sims     Sim[]
 
+  @@index([createdAt(sort: Desc)])
   @@map("devices")
 }
 
@@ -45,6 +46,9 @@ model Account {
 
   device Device @relation(fields: [dispositivoId], references: [id], onDelete: Cascade)
 
+  @@index([dispositivoId])
+  @@index([createdAt(sort: Desc)])
+  @@index([dispositivoId, createdAt(sort: Asc)])
   @@map("accounts")
 }
 
@@ -65,6 +69,9 @@ model Sim {
 
   device Device? @relation(fields: [dispositivoId], references: [id], onDelete: SetNull)
 
+  @@index([dispositivoId])
+  @@index([createdAt(sort: Desc)])
+  @@index([dispositivoId, createdAt(sort: Asc)])
   @@map("sims")
 }
 

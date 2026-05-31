@@ -68,3 +68,5 @@ Ehthumbs.db
 
 # Generados por herramientas de IA y Prisma
 /src/generated/prisma
+
+.vercel
