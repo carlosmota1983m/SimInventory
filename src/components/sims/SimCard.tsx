@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Shield, Trash2, Edit3, Unlink, Calendar, GripVertical } from 'lucide-react';
 import type { Sim } from '@/types';
+import CarrierIcon from '@/components/shared/CarrierIcon';
 import CopyButton from '@/components/shared/CopyButton';
 import { getRechargeStatus, formatDate } from '@/lib/utils';
 
@@ -87,11 +88,8 @@ export default function SimCard({ sim, onEdit, onDelete, onUnlink, isDragging, o
               />
             )}
             {/* Carrier */}
-            <div className="flex items-center gap-1.5">
-              <div
-                className="h-2 w-2 rounded-full flex-shrink-0"
-                style={{ background: accent.dot, boxShadow: `0 0 6px ${accent.dot}80` }}
-              />
+            <div className="flex items-center gap-2">
+              <CarrierIcon compania={sim.compania} size={16} />
               <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: accent.text }}>
                 {sim.compania}
               </span>

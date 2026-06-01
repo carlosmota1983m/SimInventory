@@ -18,7 +18,7 @@ const slotOptions: { value: SlotConfig; label: string; desc: string; icon: strin
   { value: 'ONE_PHYSICAL', label: '1 Físico', desc: '1 slot para SIM física', icon: '📱' },
   { value: 'TWO_PHYSICAL', label: '2 Físicos', desc: '2 slots para SIM física', icon: '📱' },
   { value: 'ONE_PHYS_ONE_ESIM', label: '1 Físico + eSIM', desc: '1 SIM + 1 eSIM', icon: '📶' },
-  { value: 'TWO_ESIM', label: '2 eSIM', desc: '2 slots para eSIM', icon: '🔵' },
+  { value: 'TWO_ESIM', label: 'SIN SIM', desc: 'Sin slots para SIM', icon: '🚫' },
 ];
 
 export default function DeviceFormModal({ isOpen, onClose, onSubmit, initialData, title }: DeviceFormModalProps) {

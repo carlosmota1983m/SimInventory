@@ -18,6 +18,7 @@ import SimFormModal from '@/components/sims/SimFormModal';
 import AccountFormModal from '@/components/accounts/AccountFormModal';
 import ConfirmModal from '@/components/shared/ConfirmModal';
 import LoginScreen from '@/components/auth/LoginScreen';
+import CopyButton from '@/components/shared/CopyButton';
 import type { Sim } from '@/types';
 
 type Tab = 'devices' | 'sims' | 'accounts';
@@ -440,7 +441,12 @@ export default function Home() {
                           />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold text-white">{account.plataforma}</p>
-                            <p className="text-xs truncate" style={{ color: '#444' }}>{account.usuarioEmail}</p>
+                            <p className="text-xs truncate" style={{ color: '#888' }}>{account.usuarioEmail}</p>
+                            {account.notas && (
+                              <p className="text-[11px] text-zinc-500 mt-1 leading-snug">
+                                <span className="font-semibold text-zinc-400">Comentario:</span> {account.notas}
+                              </p>
+                            )}
                           </div>
                           {device && (
                             <span
@@ -451,23 +457,26 @@ export default function Home() {
                               {device.nombre}
                             </span>
                           )}
-                          <button
-                            onClick={() => handleDeleteAccount(account.id)}
-                            className="rounded-lg p-1.5 transition-all opacity-0 group-hover:opacity-100"
-                            style={{ color: '#3f3f46' }}
-                            onMouseEnter={(e) => {
-                              (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.12)';
-                              (e.currentTarget as HTMLElement).style.color = '#f87171';
-                            }}
-                            onMouseLeave={(e) => {
-                              (e.currentTarget as HTMLElement).style.background = 'transparent';
-                              (e.currentTarget as HTMLElement).style.color = '#3f3f46';
-                            }}
-                          >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <polyline points="3,6 5,6 21,6" /><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2" />
-                            </svg>
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <CopyButton text={account.usuarioEmail} label="cuenta" />
+                            <button
+                              onClick={() => handleDeleteAccount(account.id)}
+                              className="rounded-lg p-1.5 transition-all opacity-0 group-hover:opacity-100"
+                              style={{ color: '#3f3f46' }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.12)';
+                                (e.currentTarget as HTMLElement).style.color = '#f87171';
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                                (e.currentTarget as HTMLElement).style.color = '#3f3f46';
+                              }}
+                            >
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="3,6 5,6 21,6" /><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2" />
+                              </svg>
+                            </button>
+                          </div>
                         </motion.div>
                       );
                     })}

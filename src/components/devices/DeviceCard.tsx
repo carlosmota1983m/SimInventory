@@ -10,6 +10,7 @@ import {
 import type { Device, Sim } from '@/types';
 import { SLOT_CONFIG_LABELS, SLOT_CAPACITY } from '@/types';
 import CopyButton from '@/components/shared/CopyButton';
+import CarrierIcon from '@/components/shared/CarrierIcon';
 import PlatformIcon from '@/components/shared/PlatformIcon';
 import { getRechargeStatus, formatDate } from '@/lib/utils';
 
@@ -278,10 +279,7 @@ function PhoneSimRow({
       >
         {/* Carrier dot + name */}
         <div className="phone-sim-left">
-          <div
-            className="phone-sim-dot"
-            style={{ background: accent.to, boxShadow: `0 0 8px ${accent.to}80` }}
-          />
+          <CarrierIcon compania={sim.compania} size={20} className="mr-1.5" />
           <div className="phone-sim-info">
             <div className="phone-sim-carrier-row">
               <span className="phone-sim-carrier" style={{ color: accent.text }}>

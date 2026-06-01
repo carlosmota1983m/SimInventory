@@ -67,12 +67,12 @@ export const SLOT_CONFIG_LABELS: Record<SlotConfig, string> = {
   ONE_PHYSICAL: '1 Físico',
   TWO_PHYSICAL: '2 Físicos',
   ONE_PHYS_ONE_ESIM: '1 Físico + 1 eSIM',
-  TWO_ESIM: '2 eSIM',
+  TWO_ESIM: 'SIN SIM',
 };
 
 export const SLOT_CAPACITY: Record<SlotConfig, { physical: number; esim: number }> = {
   ONE_PHYSICAL: { physical: 1, esim: 0 },
   TWO_PHYSICAL: { physical: 2, esim: 0 },
   ONE_PHYS_ONE_ESIM: { physical: 1, esim: 1 },
-  TWO_ESIM: { physical: 0, esim: 2 },
+  TWO_ESIM: { physical: 0, esim: 0 },
 };

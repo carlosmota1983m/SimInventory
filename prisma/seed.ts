@@ -34,7 +34,7 @@ async function main() {
   const samsung = await prisma.device.create({
     data: {
       nombre: 'Samsung Galaxy S24',
-      configuracionSlots: 'TWO_ESIM',
+      configuracionSlots: 'ONE_PHYS_ONE_ESIM',
     },
   });
 

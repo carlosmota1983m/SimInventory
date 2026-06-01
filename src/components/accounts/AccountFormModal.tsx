@@ -210,15 +210,15 @@ export default function AccountFormModal({
               />
             </div>
 
-            {/* Notes */}
+            {/* Comentario */}
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">
-                Notas <span className="text-zinc-600 font-normal">(opcional)</span>
+                Comentario <span className="text-zinc-600 font-normal">(opcional)</span>
               </label>
               <textarea
                 value={notas}
                 onChange={(e) => setNotas(e.target.value)}
-                placeholder="Notas adicionales..."
+                placeholder="Comentarios adicionales..."
                 rows={2}
                 className="input-base text-sm resize-none"
               />

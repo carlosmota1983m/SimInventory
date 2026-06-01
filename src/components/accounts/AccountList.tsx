@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Users, Smartphone, Trash2, Plus, Search, ExternalLink } from 'lucide-react';
 import type { Account, Device } from '@/types';
 import PlatformIcon from '@/components/shared/PlatformIcon';
+import CopyButton from '@/components/shared/CopyButton';
 
 interface AccountListProps {
   accounts: Account[];
@@ -86,7 +87,8 @@ export default function AccountList({
               )}
 
               {/* Actions */}
-              <div className="account-actions">
+              <div className="account-actions" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CopyButton text={account.usuarioEmail} label="cuenta" />
                 <button 
                   onClick={() => onDeleteAccount(account.id)}
                   className="account-delete-btn"
